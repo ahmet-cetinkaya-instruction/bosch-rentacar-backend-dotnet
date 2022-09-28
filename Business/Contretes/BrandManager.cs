@@ -1,5 +1,7 @@
 ﻿using Business.Abstracts;
 using Business.BusinessRules;
+using Business.Requests.Brands;
+using Business.Responses.Brands;
 using DataAccess.Abstracts;
 using Entities.Concretes;
 using System;
@@ -21,38 +23,50 @@ namespace Business.Contretes
             _brandBusinessRules = brandBusinessRules;
         }
 
-        public void Add(Brand brand)
+        public void Add(CreateBrandRequest request)
         {
-            _brandBusinessRules.CheckIfBrandNameNotExists(brand.Name);
+            _brandBusinessRules.CheckIfBrandNameNotExists(request.Name);
 
-            _brandDal.Add(brand);
+            Brand brandToAdd = new Brand { Name = request.Name };
+
+            _brandDal.Add(brandToAdd);
         }
 
-        public void Delete(Brand brand)
+        public void Delete(DeleteBrandRequest request)
         {
-            _brandBusinessRules.CheckIfBrandExists(brand.Id);
-            _brandDal.Delete(brand);
+            _brandBusinessRules.CheckIfBrandExists(request.Id);
+
+            Brand brandToDelete = new Brand { Id = request.Id };
+
+            _brandDal.Delete(brandToDelete);
         }
 
-        public List<Brand> GetList()
+        public List<ListBrandResponse> GetList()
         {
-            return _brandDal.GetList();
+            List<Brand> brands = _brandDal.GetList();
+
+            List<ListBrandResponse> response = new();
+            foreach (Brand brand in brands)
+                response.Add(new ListBrandResponse { Id = brand.Id, Name = brand.Name });
+
+            return response;
         }
 
-        public Brand GetById(int id)
+        public GetBrandResponse GetById(int id)
         {
             Brand? brand = _brandDal.GetById(id);
             _brandBusinessRules.CheckIfBrandExists(brand);
 
-            return brand!;
+            GetBrandResponse response = new() { Id = brand!.Id, Name = brand.Name };
+            return response;
         }
 
-        public void Update(Brand brand)
+        public void Update(UpdateBrandRequest request)
         {
-            Brand? brandToUpdate = _brandDal.GetById(brand.Id);
-            _brandBusinessRules.CheckIfBrandExists(brand);
+            Brand? brandToUpdate = _brandDal.GetById(request.Id);
+            _brandBusinessRules.CheckIfBrandExists(brandToUpdate);
 
-            brandToUpdate!.Name = brand.Name;
+            brandToUpdate!.Name = request.Name;
             _brandDal.Update(brandToUpdate);
         }
     }

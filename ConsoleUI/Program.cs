@@ -1,6 +1,8 @@
 ﻿using Business.Abstracts;
 using Business.BusinessRules;
 using Business.Contretes;
+using Business.Requests.Brands;
+using Business.Responses.Brands;
 using DataAccess.Abstracts;
 using DataAccess.Concretes.InMemory;
 using Entities.Concretes;
@@ -13,10 +15,9 @@ BrandBusinessRules brandBusinessRules = new(brandDal);
 IBrandService brandService = new BrandManager(brandDal, brandBusinessRules);
 
 //
-Brand brandToAdd = new Brand { Id = 1, Name = "Toyota" };
-Brand brandToAdd2 = new Brand { Id = 2, Name = "BMW" };
-
-//Brand brandToException = new Brand { Id = 3, Name = "BMW" };
+CreateBrandRequest brandToAdd = new() { Name = "Toyota" };
+CreateBrandRequest brandToAdd2 = new() { Name = "BMW" };
+//CreateBrandRequest brandToException = new() { Id = 3, Name = "BMW" };
 
 brandService.Add(brandToAdd);
 brandService.Add(brandToAdd2);
@@ -24,18 +25,18 @@ brandService.Add(brandToAdd2);
 //
 
 //
-Brand brandToUpdate = brandService.GetById(1);
-brandToUpdate.Name = "Audi";
-brandService.Update(brandToUpdate);
+GetBrandResponse brandToUpdate = brandService.GetById(1);
+UpdateBrandRequest updateBrandRequest = new() { Id = brandToUpdate.Id, Name = "Audi" };
+brandService.Update(updateBrandRequest);
 //
 
 //
-Brand brandToDelete = brandService.GetById(2);
-brandService.Delete(brandToDelete);
+DeleteBrandRequest deleteBrandRequest = new() { Id = 2 };
+brandService.Delete(deleteBrandRequest);
 //
 
 //
-List<Brand> brandList = brandService.GetList();
-foreach (Brand brand in brandList)
-    Console.WriteLine(brand.Name);
+List<ListBrandResponse> brandList = brandService.GetList();
+foreach (ListBrandResponse brand in brandList)
+    Console.WriteLine($"Id : {brand.Name}");
 //

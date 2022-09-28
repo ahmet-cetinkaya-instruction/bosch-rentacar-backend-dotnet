@@ -19,12 +19,14 @@ namespace DataAccess.Concretes.InMemory
 
         public void Add(Brand brand)
         {
-            _brands.Add(brand);
+            Brand brandToAdd = new Brand { Id = _brands.Count + 1, Name = brand.Name };
+            _brands.Add(brandToAdd);
         }
 
         public void Delete(Brand brand)
         {
-           _brands.Remove(brand);
+            Brand brandToDelete = _brands.First(b => b.Id == brand.Id);
+            _brands.Remove(brandToDelete);
         }
 
         public Brand? GetById(int id)
@@ -34,7 +36,7 @@ namespace DataAccess.Concretes.InMemory
 
         public Brand? GetByName(string name)
         {
-            return _brands.FirstOrDefault(b => b.Name == name);
+            return _brands.FirstOrDefault(b => b.Name.ToLower() == name.ToLower());
         }
 
         public List<Brand> GetList()
@@ -44,7 +46,7 @@ namespace DataAccess.Concretes.InMemory
 
         public void Update(Brand brand)
         {
-            var brandToUpdate = _brands.First(b=>b.Id == brand.Id);
+            var brandToUpdate = _brands.First(b => b.Id == brand.Id);
             brandToUpdate.Name = brand.Name;
         }
     }

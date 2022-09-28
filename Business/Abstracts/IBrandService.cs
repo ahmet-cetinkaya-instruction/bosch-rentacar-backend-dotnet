@@ -1,4 +1,6 @@
-﻿using Entities.Concretes;
+﻿using Business.Requests.Brands;
+using Business.Responses.Brands;
+using Entities.Concretes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +11,10 @@ namespace Business.Abstracts
 {
     public interface IBrandService
     {
-        Brand GetById(int id);
-        List<Brand> GetList();
-        void Add(Brand brand);
-        void Update(Brand brand);
-        void Delete(Brand brand);
+        GetBrandResponse GetById(int id);
+        List<ListBrandResponse> GetList();
+        void Add(CreateBrandRequest request);
+        void Update(UpdateBrandRequest request);
+        void Delete(DeleteBrandRequest request);
     }
 }
