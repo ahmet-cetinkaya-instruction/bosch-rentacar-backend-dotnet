@@ -1,10 +1,10 @@
 using Business.Abstracts;
 using Business.BusinessRules;
-using Business.Contretes;
+using Business.Concretes;
 using DataAccess.Abstracts;
 using DataAccess.Concretes.InMemory;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<IBrandDal, InMemoryBrandDal>(); // 100
 builder.Services.AddSingleton<BrandBusinessRules>(); // 101
 builder.Services.AddSingleton<IBrandService, BrandManager>(); // 102
+builder.Services.AddAutoMapper(assemblies: AppDomain.CurrentDomain.GetAssemblies()); // Extension
 //
 
 builder.Services.AddControllers();
@@ -19,7 +20,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
