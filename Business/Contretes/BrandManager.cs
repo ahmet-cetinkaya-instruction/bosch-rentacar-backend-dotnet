@@ -4,11 +4,6 @@ using Business.Requests.Brands;
 using Business.Responses.Brands;
 using DataAccess.Abstracts;
 using Entities.Concretes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Contretes
 {
@@ -19,8 +14,8 @@ namespace Business.Contretes
 
         public BrandManager(IBrandDal brandDal, BrandBusinessRules brandBusinessRules)
         {
-            _brandDal = brandDal;
-            _brandBusinessRules = brandBusinessRules;
+            _brandDal = brandDal; // 100
+            _brandBusinessRules = brandBusinessRules; // 101
         }
 
         public void Add(CreateBrandRequest request)

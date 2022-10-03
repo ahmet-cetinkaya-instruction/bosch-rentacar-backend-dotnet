@@ -1,10 +1,13 @@
 ﻿using Business.Abstracts;
-using Business.BusinessRules;
-using Business.Contretes;
+using Business.Requests.Brands;
 using Business.Responses.Brands;
-using DataAccess.Abstracts;
-using DataAccess.Concretes.InMemory;
 using Microsoft.AspNetCore.Mvc;
+
+// GetList: GET api/brands
+// GetById: GET api/brands/1
+// Add: POST api/brands
+// Update: PUT api/brands/1
+// Delete: DELETE api/brands/1
 
 namespace WebAPI.Controllers
 {
@@ -14,11 +17,9 @@ namespace WebAPI.Controllers
     {
         private readonly IBrandService _brandService;
 
-        public BrandsController() //todo: IoC - Inversion of Control
+        public BrandsController(IBrandService brandService)
         {
-            IBrandDal brandDal = new InMemoryBrandDal();
-            BrandBusinessRules brandBusinessRules = new(brandDal);
-            _brandService = new BrandManager(brandDal, brandBusinessRules);
+            _brandService = brandService; // 102
         }
 
         [HttpGet]
@@ -26,6 +27,31 @@ namespace WebAPI.Controllers
         {
             List<ListBrandResponse> result = _brandService.GetList();
             return result;
+        }
+
+        [HttpGet(template: "{id}")]
+        public GetBrandResponse GetById(int id)
+        {
+            GetBrandResponse result = _brandService.GetById(id);
+            return result;
+        }
+
+        [HttpPost]
+        public void Add(CreateBrandRequest request)
+        {
+            _brandService.Add(request);
+        }
+
+        [HttpPut]
+        public void Update(UpdateBrandRequest request)
+        {
+            _brandService.Update(request);
+        }
+
+        [HttpDelete(template: "{Id}")]
+        public void Delete([FromRoute] DeleteBrandRequest request)
+        {
+            _brandService.Delete(request);
         }
     }
 }
