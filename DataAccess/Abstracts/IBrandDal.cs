@@ -4,16 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.DataAccess;
 
 namespace DataAccess.Abstracts
 {
-    public interface IBrandDal
+    public interface IBrandDal:IEntityRepository<Brand>
     {
-        Brand? GetById(int id);
-        Brand? GetByName(string name);
-        List<Brand> GetList();
-        void Add(Brand brand);
-        void Update(Brand brand);
-        void Delete(Brand brand);
+
     }
 }
