@@ -23,6 +23,14 @@ namespace DataAccess.Concretes.EntityFramework.Contexts
                 b.Property(b => b.Id).HasColumnName("Id");
                 b.Property(b => b.Name).HasColumnName("Name").IsRequired();
             });
+
+            // Seed
+            Brand[] brandSeeds = { new() { Id = 1, Name = "Audi" } };
+            modelBuilder.Entity<Brand>().HasData(brandSeeds);
         }
     }
 }
+
+// Migration oluşturmak ve kullanmak için:
+// Add-Migration AddBrands
+// Update-Database
