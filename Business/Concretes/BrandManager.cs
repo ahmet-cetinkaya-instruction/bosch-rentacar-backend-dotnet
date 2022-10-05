@@ -23,7 +23,7 @@ public class BrandManager : IBrandService
 
     public void Add(CreateBrandRequest request)
     {
-        _brandBusinessRules.CheckIfBrandNameNotExists(request.Name);
+        //_brandBusinessRules.CheckIfBrandNameNotExists(request.Name);
 
         Brand brandToAdd = _mapper.Map<Brand>(request); // AutoMapper Reflection
 
