@@ -22,8 +22,7 @@ public class BrandManager : IBrandService
     }
 
     public void Add(CreateBrandRequest request)
-    {
-        //_brandBusinessRules.CheckIfBrandNameNotExists(request.Name);
+    {_brandBusinessRules.CheckIfBrandNameNotExists(request.Name);
 
         Brand brandToAdd = _mapper.Map<Brand>(request); // AutoMapper Reflection
 
@@ -50,7 +49,7 @@ public class BrandManager : IBrandService
 
     public GetBrandResponse GetById(int id)
     {
-        Brand? brand = _brandDal.GetById(id);
+        Brand? brand = _brandDal.Get(b=>b.Id==id);
         _brandBusinessRules.CheckIfBrandExists(brand);
 
         GetBrandResponse response = _mapper.Map<GetBrandResponse>(brand);
@@ -60,7 +59,7 @@ public class BrandManager : IBrandService
 
     public void Update(UpdateBrandRequest request)
     {
-        Brand? brand = _brandDal.GetById(request.Id);
+        Brand? brand = _brandDal.Get(b => b.Id == request.Id);
         _brandBusinessRules.CheckIfBrandExists(brand);
 
         Brand brandToUpdate = _mapper.Map<Brand>(request);

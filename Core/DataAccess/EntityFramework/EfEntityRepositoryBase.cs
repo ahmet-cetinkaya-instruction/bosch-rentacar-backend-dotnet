@@ -1,51 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Core.DataAccess.EntityFramework
-{
-    public class EfEntityRepositoryBase<TEntity, TContext>: IEntityRepository<TEntity> 
+namespace Core.DataAccess.EntityFramework;
+
+public class EfEntityRepositoryBase<TEntity, TContext> : IEntityRepository<TEntity>
     where TEntity : class, // Referans tip
-                    IEntity, new()
-    where TContext: DbContext, new() 
+    IEntity, new()
+    where TContext : DbContext, new()
+{
+    public TEntity? Get(Expression<Func<TEntity, bool>> predicate)
     {
-        public TEntity? Get(Expression<Func<TEntity, bool>> predicate)
+        using (TContext context = new())
         {
-            using (TContext context = new())
-            {
-                return context.Set<TEntity>().SingleOrDefault(predicate);
-            }
+            return context.Set<TEntity>().SingleOrDefault(predicate);
         }
+    }
 
-        public List<TEntity> GetList(Expression<Func<TEntity, bool>> predicate = null)
+    public List<TEntity> GetList(Expression<Func<TEntity, bool>>? predicate = null)
+    {
+        using (TContext context = new())
         {
-            throw new NotImplementedException();
+            return predicate != null
+                       ? context.Set<TEntity>().Where(predicate).ToList()
+                       : context.Set<TEntity>().ToList();
         }
+    }
 
-        public void Add(TEntity entity)
+    public void Add(TEntity entity)
+    {
+        // Stack (Heap'teki referans adresi) = Heap Değer Alanı
+        using (TContext context = new())
         {
-            // Stack (Heap'teki referans adresi) = Heap Değer Alanı
-            using (TContext context = new())
-            {
-                var entityToAdd = context.Entry(entity);
-                entityToAdd.State = EntityState.Added;
-                context.SaveChanges(); // Unit of work
-            }
-        } // Garbage Collector
-
-        public void Update(TEntity entity)
-        {
-            throw new NotImplementedException();
+            EntityEntry<TEntity> entityToAdd = context.Entry(entity);
+            entityToAdd.State = EntityState.Added;
+            context.SaveChanges(); // Unit of work
         }
+    } // Garbage Collector
 
-        public void Delete(TEntity entity)
+    public void Update(TEntity entity)
+    {
+        using (TContext context = new())
         {
-            throw new NotImplementedException();
+            EntityEntry<TEntity> entityToUpdate = context.Entry(entity);
+            entityToUpdate.State = EntityState.Modified;
+            context.SaveChanges();
+        }
+    }
+
+    public void Delete(TEntity entity)
+    {
+        using (TContext context = new())
+        {
+            EntityEntry<TEntity> entityToDelete = context.Entry(entity);
+            entityToDelete.State = EntityState.Deleted;
+            context.SaveChanges();
         }
     }
 }

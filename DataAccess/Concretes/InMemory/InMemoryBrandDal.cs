@@ -3,6 +3,7 @@ using Entities.Concretes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +16,16 @@ namespace DataAccess.Concretes.InMemory
         public InMemoryBrandDal()
         {
             _brands = new List<Brand>();
+        }
+
+        public Brand? Get(Expression<Func<Brand, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Brand> GetList(Expression<Func<Brand, bool>>? predicate = null)
+        {
+            throw new NotImplementedException();
         }
 
         public void Add(Brand brand)
