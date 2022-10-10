@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Business.Exceptions;
 
 namespace Business.BusinessRules
 {
@@ -20,13 +21,13 @@ namespace Business.BusinessRules
         public void CheckIfBrandExists(Brand? brand)
         {
             if (brand == null)
-                throw new Exception("Brand not be exists.");
+                throw new BusinessException("Brand not be exists.");
         }
 
         public void CheckIfBrandNotExists(Brand? brand)
         {
             if (brand != null)
-                throw new Exception("Brand already exists.");
+                throw new BusinessException("Brand already exists.");
         }
 
         public void CheckIfBrandExists(int brandId)

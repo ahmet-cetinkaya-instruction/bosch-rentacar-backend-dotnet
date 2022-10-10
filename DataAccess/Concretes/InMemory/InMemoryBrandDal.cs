@@ -25,7 +25,7 @@ namespace DataAccess.Concretes.InMemory
 
         public List<Brand> GetList(Expression<Func<Brand, bool>>? predicate = null)
         {
-            throw new NotImplementedException();
+            return _brands.Where(predicate.Compile()).ToList();
         }
 
         public void Add(Brand brand)
