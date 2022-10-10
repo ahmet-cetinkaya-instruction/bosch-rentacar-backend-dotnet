@@ -10,7 +10,6 @@ namespace Core.Business.Exceptions
     {
         public BusinessException(string message) : base(message)
         {
-            
         }
     }
 }

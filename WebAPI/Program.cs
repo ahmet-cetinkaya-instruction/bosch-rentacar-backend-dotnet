@@ -2,6 +2,7 @@ using Business;
 using Business.Abstracts;
 using Business.BusinessRules;
 using Business.Concretes;
+using Core.CrossCuttingConcerns.Exceptions;
 using DataAccess.Abstracts;
 using DataAccess.Concretes.InMemory;
 
@@ -28,5 +29,8 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.MapControllers();
+
+if(app.Environment.IsProduction())
+    app.UseMiddleware<ExceptionMiddleware>();
 
 app.Run();

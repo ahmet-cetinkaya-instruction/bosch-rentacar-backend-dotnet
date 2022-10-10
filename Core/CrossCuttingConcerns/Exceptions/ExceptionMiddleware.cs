@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using Core.Business.Exceptions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Core.CrossCuttingConcerns.Exceptions
 {
@@ -33,6 +35,7 @@ namespace Core.CrossCuttingConcerns.Exceptions
             if (exception.GetType() == typeof(BusinessException))
                 return CreateBusinessException(context, exception);
 
+            return CreateInternalException(context, exception);
         }
 
         private Task CreateBusinessException(HttpContext context, Exception exception)
@@ -47,6 +50,20 @@ namespace Core.CrossCuttingConcerns.Exceptions
                 Detail = exception.Message,
                 Instance = ""
             }.ToString());
+        }
+
+        private Task CreateInternalException(HttpContext context, Exception exception)
+        {
+            context.Response.StatusCode = Convert.ToInt32(HttpStatusCode.InternalServerError);
+
+            return context.Response.WriteAsync(JsonConvert.SerializeObject(new ProblemDetails
+            {
+                Status = StatusCodes.Status500InternalServerError,
+                Type = "https://rentacar.com/api/docs/internal",
+                Title = "Internal Exception",
+                Detail = exception.Message,
+                Instance = ""
+            }));
         }
     }
 }
