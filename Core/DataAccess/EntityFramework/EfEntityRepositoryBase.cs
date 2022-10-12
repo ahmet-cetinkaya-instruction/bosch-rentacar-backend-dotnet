@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Core.DataAccess.EntityFramework;
 
-public class EfEntityRepositoryBase<TEntity, TContext> : IEntityRepository<TEntity>
+public abstract class EfEntityRepositoryBase<TEntity, TContext> : IEntityRepository<TEntity>
     where TEntity : class, // Referans tip
     IEntity, new()
     where TContext : DbContext, new()

@@ -1,13 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-
-namespace Core.CrossCuttingConcerns.Exceptions
+﻿namespace Core.CrossCuttingConcerns.Exceptions
 {
-    public class BusinessProblemDetails : ProblemDetails
+    public class BusinessProblemDetails : ExceptionProblemDetailsBase
     {
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
+        // Kalıtım 1 tane base sınıfı olabilir.
+        // Birden fazla interface'e uyabilir.
     }
 }

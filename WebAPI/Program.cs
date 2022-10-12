@@ -30,7 +30,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-if(app.Environment.IsProduction())
+//if(app.Environment.IsProduction())
     app.UseMiddleware<ExceptionMiddleware>();
 
 app.Run();

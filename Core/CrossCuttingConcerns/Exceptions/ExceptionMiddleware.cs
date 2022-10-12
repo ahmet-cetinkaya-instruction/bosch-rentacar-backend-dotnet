@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Core.Business.Exceptions;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -34,8 +35,25 @@ namespace Core.CrossCuttingConcerns.Exceptions
 
             if (exception.GetType() == typeof(BusinessException))
                 return CreateBusinessException(context, exception);
+            if (exception.GetType() == typeof(ValidationException))
+                return CreateValidationException(context, exception);
 
             return CreateInternalException(context, exception);
+        }
+
+        private Task CreateValidationException(HttpContext context, Exception exception)
+        {
+            context.Response.StatusCode = Convert.ToInt32(HttpStatusCode.BadRequest);
+
+            return context.Response.WriteAsync(new ValidationProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Type = "https://rentacar.com/api/docs/validation",
+                Title = "Validation Error(s)",
+                Detail = "",
+                Instance = "",
+                Errors = (exception as ValidationException)!.Errors
+            }.ToString());
         }
 
         private Task CreateBusinessException(HttpContext context, Exception exception)

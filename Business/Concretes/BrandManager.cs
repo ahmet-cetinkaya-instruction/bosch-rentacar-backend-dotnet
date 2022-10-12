@@ -3,8 +3,12 @@ using Business.Abstracts;
 using Business.BusinessRules;
 using Business.Requests.Brands;
 using Business.Responses.Brands;
+using Business.ValidationRules.FluentValidation.Brands;
+using Core.CrossCuttingConcerns.Validation.FluentValidation;
 using DataAccess.Abstracts;
 using Entities.Concretes;
+using FluentValidation;
+using FluentValidation.Results;
 
 namespace Business.Concretes;
 
@@ -23,6 +27,9 @@ public class BrandManager : IBrandService
 
     public void Add(CreateBrandRequest request)
     {
+        // Dry code - Dont repeat yourself
+        ValidationTool.Validate(new CreateBrandRequestValidator(), request);
+
         _brandBusinessRules.CheckIfBrandNameNotExists(request.Name);
 
         Brand brandToAdd = _mapper.Map<Brand>(request); // AutoMapper Reflection
