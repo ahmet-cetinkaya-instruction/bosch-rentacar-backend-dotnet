@@ -25,6 +25,7 @@ public class ModelManager : IModelService
                                      include: m => m.Include(mi => mi.Brand));
 
         GetModelResponse response = _mapper.Map<GetModelResponse>(model);
+
         return response;
     }
 }

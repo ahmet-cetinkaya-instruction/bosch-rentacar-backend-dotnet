@@ -29,6 +29,11 @@ namespace DataAccess.Concretes.InMemory
             throw new NotImplementedException();
         }
 
+        public Brand? Get(Expression<Func<Brand, bool>> predicate, Func<IQueryable<Brand>, IIncludableQueryable<Brand, object>> include = null, bool enableTracking = true)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<Brand> GetList(Expression<Func<Brand, bool>>? predicate = null)
         {
             return _brands.Where(predicate.Compile()).ToList();

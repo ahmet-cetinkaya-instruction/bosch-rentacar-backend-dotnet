@@ -12,23 +12,30 @@ public abstract class EfEntityRepositoryBase<TEntity, TContext> : IEntityReposit
     where TContext : DbContext, new()
 {
     public TEntity? Get(Expression<Func<TEntity, bool>> predicate, 
-                        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
+                        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null, bool enableTracking = true)
     {
         using (TContext context = new())
         {
-            IQueryable<TEntity> query = context.Set<TEntity>();
-            if (include is not null) query = include(query);
-            return query.SingleOrDefault(predicate);
+            IQueryable<TEntity> queryable = context.Set<TEntity>();
+            if (!enableTracking) queryable.AsNoTracking();
+            if (include is not null) queryable = include(queryable);
+            return queryable.SingleOrDefault(predicate);
         }
     }
 
-    public List<TEntity> GetList(Expression<Func<TEntity, bool>>? predicate = null)
+    public List<TEntity> GetList(Expression<Func<TEntity, bool>>? predicate = null,
+                                 Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null, 
+                                 bool enableTracking = true)
     {
         using (TContext context = new())
         {
-            return predicate != null
-                       ? context.Set<TEntity>().Where(predicate).ToList()
-                       : context.Set<TEntity>().ToList();
+            IQueryable<TEntity> queryable = context.Set<TEntity>();
+
+            if (!enableTracking) queryable.AsNoTracking();
+            if (include is not null) queryable = include(queryable);
+            if (predicate is not null) queryable = queryable.Where(predicate);
+
+            return queryable.ToList();
         }
     }
 
