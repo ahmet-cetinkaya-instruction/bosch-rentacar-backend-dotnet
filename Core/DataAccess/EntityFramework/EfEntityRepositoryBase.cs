@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Core.DataAccess.Paging;
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -23,8 +24,10 @@ public abstract class EfEntityRepositoryBase<TEntity, TContext> : IEntityReposit
         }
     }
 
-    public List<TEntity> GetList(Expression<Func<TEntity, bool>>? predicate = null,
-                                 Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null, 
+    public IPaginate<TEntity> GetList(Expression<Func<TEntity, bool>>? predicate = null,
+                                 Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+                                 Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+                                 int index = 0, int size=10,
                                  bool enableTracking = true)
     {
         using (TContext context = new())
@@ -34,8 +37,8 @@ public abstract class EfEntityRepositoryBase<TEntity, TContext> : IEntityReposit
             if (!enableTracking) queryable.AsNoTracking();
             if (include is not null) queryable = include(queryable);
             if (predicate is not null) queryable = queryable.Where(predicate);
-
-            return queryable.ToList();
+            if (orderBy is not null) queryable = orderBy(queryable);
+            return queryable.ToPaginate(index, size); // Extension
         }
     }
 

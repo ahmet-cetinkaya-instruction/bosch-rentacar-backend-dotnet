@@ -4,11 +4,11 @@ using Business.BusinessRules;
 using Business.Requests.Brands;
 using Business.Responses.Brands;
 using Business.ValidationRules.FluentValidation.Brands;
+using Core.Business.Requests;
 using Core.CrossCuttingConcerns.Validation.FluentValidation;
+using Core.DataAccess.Paging;
 using DataAccess.Abstracts;
 using Entities.Concretes;
-using FluentValidation;
-using FluentValidation.Results;
 
 namespace Business.Concretes;
 
@@ -46,18 +46,20 @@ public class BrandManager : IBrandService
         _brandDal.Delete(brandToDelete);
     }
 
-    public List<ListBrandResponse> GetList()
+    public PaginateListBrandResponse GetList(PageRequest request)
     {
-        List<Brand> brands = _brandDal.GetList();
+        IPaginate<Brand> brands = _brandDal.GetList(index: request.Index, 
+                                                    size: request.Size, 
+                                                    orderBy: b => b.OrderBy(b => b.Name));
 
-        List<ListBrandResponse> response = _mapper.Map<List<ListBrandResponse>>(brands);
+        PaginateListBrandResponse response = _mapper.Map<PaginateListBrandResponse>(brands);
 
         return response;
     }
 
     public GetBrandResponse GetById(int id)
     {
-        Brand? brand = _brandDal.Get(b=>b.Id==id);
+        Brand? brand = _brandDal.Get(b => b.Id == id);
         _brandBusinessRules.CheckIfBrandExists(brand);
 
         GetBrandResponse response = _mapper.Map<GetBrandResponse>(brand);

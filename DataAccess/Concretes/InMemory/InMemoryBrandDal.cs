@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Core.DataAccess.Paging;
 using Microsoft.EntityFrameworkCore.Query;
 
 namespace DataAccess.Concretes.InMemory
@@ -19,17 +20,13 @@ namespace DataAccess.Concretes.InMemory
             _brands = new List<Brand>();
         }
 
-        public Brand? Get(Expression<Func<Brand, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Brand? Get(Expression<Func<Brand, bool>> predicate, Func<IQueryable<Brand>, IIncludableQueryable<Brand, object>> include = null)
-        {
-            throw new NotImplementedException();
-        }
-
         public Brand? Get(Expression<Func<Brand, bool>> predicate, Func<IQueryable<Brand>, IIncludableQueryable<Brand, object>> include = null, bool enableTracking = true)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IPaginate<Brand> GetList(Expression<Func<Brand, bool>>? predicate = null, Func<IQueryable<Brand>, IIncludableQueryable<Brand, object>> include = null, Func<IQueryable<Brand>, IOrderedQueryable<Brand>> orderBy = null, int index = 0, int size = 10,
+                                        bool enableTracking = true)
         {
             throw new NotImplementedException();
         }

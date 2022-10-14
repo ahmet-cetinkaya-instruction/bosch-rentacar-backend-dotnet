@@ -6,13 +6,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Business.Requests;
+using Core.DataAccess.Paging;
 
 namespace Business.Abstracts
 {
     public interface IBrandService
     {
         GetBrandResponse GetById(int id);
-        List<ListBrandResponse> GetList();
+        PaginateListBrandResponse GetList(PageRequest request);
         void Add(CreateBrandRequest request);
         void Update(UpdateBrandRequest request);
         void Delete(DeleteBrandRequest request);

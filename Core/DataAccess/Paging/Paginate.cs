@@ -22,10 +22,6 @@ public class Paginate<T> : IPaginate<T>
     // Readonly property'leri sadece constructor içerisinde set edebiliriz.
     public Paginate(IEnumerable<T> source, int index, int size, int from)
     {
-        // (T[])source casting başarısız olursa exception fırlatır.
-        // source as T[] casting başarısız olursa null döner.
-        T[] enumerable = source as T[] ?? source.ToArray();
-
         if (from > index)
             throw new ArgumentException($"indexFrom: {from} > pageIndex: {index}, must indexFrom <= pageIndex");
 
@@ -40,6 +36,9 @@ public class Paginate<T> : IPaginate<T>
         }
         else
         {
+            // (T[])source casting başarısız olursa exception fırlatır.
+            // source as T[] casting başarısız olursa null döner.
+            T[] enumerable = source as T[] ?? source.ToArray();
             Count = enumerable.Count();
             Items = enumerable.Skip((Index - From) * Size).Take(Size).ToList();
         }
