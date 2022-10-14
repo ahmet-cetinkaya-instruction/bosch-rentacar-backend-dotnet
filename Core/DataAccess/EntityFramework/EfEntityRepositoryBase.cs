@@ -2,6 +2,7 @@
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Core.DataAccess.EntityFramework;
 
@@ -10,11 +11,14 @@ public abstract class EfEntityRepositoryBase<TEntity, TContext> : IEntityReposit
     IEntity, new()
     where TContext : DbContext, new()
 {
-    public TEntity? Get(Expression<Func<TEntity, bool>> predicate)
+    public TEntity? Get(Expression<Func<TEntity, bool>> predicate, 
+                        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
     {
         using (TContext context = new())
         {
-            return context.Set<TEntity>().SingleOrDefault(predicate);
+            IQueryable<TEntity> query = context.Set<TEntity>();
+            if (include is not null) query = include(query);
+            return query.SingleOrDefault(predicate);
         }
     }
 

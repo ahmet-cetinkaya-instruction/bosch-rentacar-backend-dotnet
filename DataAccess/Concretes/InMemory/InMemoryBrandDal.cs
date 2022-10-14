@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace DataAccess.Concretes.InMemory
 {
@@ -19,6 +20,11 @@ namespace DataAccess.Concretes.InMemory
         }
 
         public Brand? Get(Expression<Func<Brand, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Brand? Get(Expression<Func<Brand, bool>> predicate, Func<IQueryable<Brand>, IIncludableQueryable<Brand, object>> include = null)
         {
             throw new NotImplementedException();
         }

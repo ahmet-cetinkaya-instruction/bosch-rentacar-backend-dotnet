@@ -24,6 +24,10 @@ namespace Business
             services.AddSingleton<IBrandDal, EfBrandDal>(); // 100
             services.AddSingleton<BrandBusinessRules>(); // 101
             services.AddSingleton<IBrandService, BrandManager>(); // 102
+
+            services.AddSingleton<IModelDal, EfModelDal>();
+            services.AddSingleton<IModelService, ModelManager>();
+
             services.AddAutoMapper(assemblies: AppDomain.CurrentDomain.GetAssemblies());
 
             // return <genişletmek istenen tür>
