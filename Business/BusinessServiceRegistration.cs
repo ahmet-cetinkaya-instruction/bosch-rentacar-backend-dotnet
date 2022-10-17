@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Business.Abstracts;
 using Business.BusinessRules;
 using Business.Concretes;
+using Core.Business.Mailing;
+using Core.Business.Mailing.MailKit;
 using DataAccess.Abstracts;
 using DataAccess.Concretes.EntityFramework;
 using DataAccess.Concretes.InMemory;
@@ -29,6 +31,8 @@ namespace Business
             services.AddSingleton<IModelService, ModelManager>();
 
             services.AddAutoMapper(assemblies: AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddSingleton<IMailService, MailKitMailService>();
 
             // return <genişletmek istenen tür>
             return services;
