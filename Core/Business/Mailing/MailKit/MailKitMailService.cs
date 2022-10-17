@@ -30,13 +30,13 @@ namespace Core.Business.Mailing.MailKit
                 TextBody = mail.TextBody,
                 HtmlBody = mail.HtmlBody,
             };
-            //if (mail.Attachments is not null)
-            //{
-            //    foreach (var attachment in mail.Attachments)
-            //    {
-            //        bodyBuilder.Attachments.Add(attachment);
-            //    }
-            //}
+            if (mail.Attachments is not null)
+            {
+                foreach (var attachment in mail.Attachments)
+                {
+                    bodyBuilder.Attachments.Add(attachment.Name, attachment.ContentStream);
+                }
+            }
             email.Body = bodyBuilder.ToMessageBody();
 
             using SmtpClient smtp = new();
