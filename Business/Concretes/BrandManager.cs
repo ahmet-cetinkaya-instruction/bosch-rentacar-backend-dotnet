@@ -4,6 +4,7 @@ using Business.BusinessRules;
 using Business.Requests.Brands;
 using Business.Responses.Brands;
 using Business.ValidationRules.FluentValidation.Brands;
+using Core.Business.Mailing;
 using Core.Business.Requests;
 using Core.CrossCuttingConcerns.Validation.FluentValidation;
 using Core.DataAccess.Paging;
@@ -17,12 +18,13 @@ public class BrandManager : IBrandService
     private readonly IBrandDal _brandDal;
     private readonly BrandBusinessRules _brandBusinessRules;
     private IMapper _mapper;
-
-    public BrandManager(IBrandDal brandDal, BrandBusinessRules brandBusinessRules, IMapper mapper)
+    private IMailService _mailService;
+    public BrandManager(IBrandDal brandDal, BrandBusinessRules brandBusinessRules, IMapper mapper, IMailService mailService)
     {
         _brandDal = brandDal; // 100
         _brandBusinessRules = brandBusinessRules; // 101
         _mapper = mapper;
+        _mailService = mailService;
     }
 
     public void Add(CreateBrandRequest request)
@@ -75,5 +77,15 @@ public class BrandManager : IBrandService
         Brand brandToUpdate = _mapper.Map<Brand>(request);
 
         _brandDal.Update(brandToUpdate);
+
+        _mailService.SendMail(new Mail()
+        {
+            TextBody = "",
+            HtmlBody = "",
+            Subject = $"Brand({brandToUpdate.Id}) has updated.",
+            ToFullName = "Ahmet Çetinkaya",
+            ToMail = "ahmetcetinkaya7@outlook.com"
+        });
+
     }
 }
