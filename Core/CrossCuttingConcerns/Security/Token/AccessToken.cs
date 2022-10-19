@@ -1,4 +1,4 @@
-﻿namespace Business.Abstracts;
+﻿namespace Core.CrossCuttingConcerns.Security.Token;
 
 public class AccessToken
 {

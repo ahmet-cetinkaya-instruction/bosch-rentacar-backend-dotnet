@@ -1,4 +1,4 @@
-﻿using Business.Abstracts;
+﻿using Core.CrossCuttingConcerns.Security.Token;
 
 namespace Business.Responses.Auth;
 
