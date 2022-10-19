@@ -19,7 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Requests\Users\" />
     <Folder Include="Responses\Models\" />
+    <Folder Include="Responses\Users\" />
   </ItemGroup>
 
 </Project>
