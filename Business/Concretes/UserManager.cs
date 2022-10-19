@@ -21,6 +21,7 @@ public class UserManager : IUserService
     public GetUsersClaimsResponse GetClaims(GetUsersClaimsRequest request)
     {
         User? user = _userDal.Get(u => u.Id == request.Id);
+        //todo: Check if user exists
         ICollection<OperationClaim> claims = _userDal.GetClaims(user);
         GetUsersClaimsResponse? response = _mapper.Map<GetUsersClaimsResponse>(claims);
         return response;
@@ -29,6 +30,7 @@ public class UserManager : IUserService
     public GetUserResponse GetByMail(string email)
     {
         User? user = _userDal.Get(u => u.Email == email);
+        //todo: Check if user exists
         GetUserResponse? response = _mapper.Map<GetUserResponse>(user);
         return response;
     }
