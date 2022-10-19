@@ -5,7 +5,7 @@ using Business.Requests.Auth;
 using Business.Requests.Users;
 using Business.Responses.Auth;
 using Business.Responses.Users;
-using Core.CrossCuttingConcerns.Security.Entities;
+using Core.CrossCuttingConcerns.Security.Hashing;
 
 namespace Business.Concretes;
 
@@ -26,12 +26,17 @@ public class AuthManager : IAuthService
     {
         // todo: check if users email exists
         _authBusinessRules.CheckIfPasswordIsEqualConfirmation(request.Password, request.PasswordConfirmation);
-        
+
         CreateUserRequest createUserRequest = _mapper.Map<CreateUserRequest>(request);
-        //todo: add password hashing
+        byte[] passwordSalt,
+               passwordHash;
+        HashingHelper.CreatePasswordHash(request.Password, out passwordHash, out passwordSalt);
+        createUserRequest.PasswordHash = passwordHash;
+        createUserRequest.PasswordSalt = passwordSalt;
         _userService.Add(createUserRequest);
+
         //todo: create access token
-        AccessResponse response = new(){AccessToken = new()};
+        AccessResponse response = new() { AccessToken = new() };
         return response;
     }
 
@@ -40,7 +45,7 @@ public class AuthManager : IAuthService
         GetUserResponse user = _userService.GetByMail(request.Email);
         //todo: check password Verification
         //todo: create access token
-        AccessResponse response = new(){AccessToken = new AccessToken()};
+        AccessResponse response = new() { AccessToken = new AccessToken() };
         return response;
     }
 }
