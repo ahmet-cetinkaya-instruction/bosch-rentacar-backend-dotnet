@@ -1,4 +1,5 @@
-﻿using Entities.Concretes;
+﻿using Core.CrossCuttingConcerns.Security.Entities;
+using Entities.Concretes;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Concretes.EntityFramework.Contexts
@@ -9,7 +10,11 @@ namespace DataAccess.Concretes.EntityFramework.Contexts
 
         public DbSet<Model> Models { get; set; }
         // Ef'in varsayılan davranışı Brand nesnesinin tablo karşılığını "Brands" şeklinde tanımasınıdır.
+        public DbSet<User> Users { get; set; }
+        public DbSet<OperationClaim> OperationClaims { get; set; }
+        public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
 
+        //todo: move connection string to appsettings.json
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Windows Auth için "...;Integrated Security=True"
@@ -33,6 +38,15 @@ namespace DataAccess.Concretes.EntityFramework.Contexts
                 m.Property(m => m.BrandId).HasColumnName("BrandId").IsRequired();
                 m.Property(m => m.Name).HasColumnName("Name").IsRequired();
                 m.HasOne(m => m.Brand);
+            });
+
+            modelBuilder.Entity<OperationClaim>(o =>
+            {
+                //o.HasKey(m => m.Id);
+                //o.Property(m => m.Id).HasColumnName("Id");
+                o.ToTable("OperationClaims")
+                 .HasIndex(o => o.Name).IsUnique();
+                o.Property(o => o.Name).HasColumnName("Name").IsRequired();
             });
 
             // Seed
