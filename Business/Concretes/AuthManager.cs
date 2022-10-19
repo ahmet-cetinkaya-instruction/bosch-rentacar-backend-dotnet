@@ -5,21 +5,25 @@ using Business.Requests.Auth;
 using Business.Requests.Users;
 using Business.Responses.Auth;
 using Business.Responses.Users;
+using Core.CrossCuttingConcerns.Security.Entities;
 using Core.CrossCuttingConcerns.Security.Hashing;
+using Core.CrossCuttingConcerns.Security.Token;
 
 namespace Business.Concretes;
 
 public class AuthManager : IAuthService
 {
-    private IUserService _userService;
-    private IMapper _mapper;
-    private AuthBusinessRules _authBusinessRules;
+    private readonly IUserService _userService;
+    private readonly IMapper _mapper;
+    private readonly AuthBusinessRules _authBusinessRules;
+    private readonly ITokenHelper _tokenHelper;
 
-    public AuthManager(IUserService userService, IMapper mapper, AuthBusinessRules authBusinessRules)
+    public AuthManager(IUserService userService, IMapper mapper, AuthBusinessRules authBusinessRules, ITokenHelper tokenHelper)
     {
         _userService = userService;
         _mapper = mapper;
         _authBusinessRules = authBusinessRules;
+        _tokenHelper = tokenHelper;
     }
 
     public AccessResponse Register(RegisterUserRequest request)
@@ -35,8 +39,11 @@ public class AuthManager : IAuthService
         createUserRequest.PasswordSalt = passwordSalt;
         _userService.Add(createUserRequest);
 
-        //todo: create access token
-        AccessResponse response = new() { AccessToken = new() };
+        GetUserResponse getUserResponse = _userService.GetByMail(request.Email);
+        User user = _mapper.Map<User>(getUserResponse);
+        AccessToken accessToken = createAccessToken(user);
+
+        AccessResponse response = new() { AccessToken = accessToken };
         return response;
     }
 
@@ -47,5 +54,12 @@ public class AuthManager : IAuthService
         //todo: create access token
         AccessResponse response = new() { AccessToken = new AccessToken() };
         return response;
+    }
+
+    private AccessToken createAccessToken(User user)
+    {
+        GetUsersClaimsResponse getUsersClaimsResponse = _userService.GetClaims(new GetUsersClaimsRequest { Id = user.Id });
+        AccessToken accessToken = _tokenHelper.CreateToken(user, getUsersClaimsResponse.Claims);
+        return accessToken;
     }
 }

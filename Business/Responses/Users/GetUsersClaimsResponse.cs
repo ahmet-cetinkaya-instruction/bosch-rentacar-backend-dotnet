@@ -4,5 +4,5 @@ namespace Business.Responses.Users;
 
 public class GetUsersClaimsResponse
 {
-    public ICollection<OperationClaim> claims { get; set; }
+    public ICollection<OperationClaim> Claims { get; set; }
 }

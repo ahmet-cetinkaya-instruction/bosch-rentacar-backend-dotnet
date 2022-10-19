@@ -9,8 +9,10 @@ public class UserMappingProfiles : Profile
 {
     public UserMappingProfiles()
     {
-        CreateMap<ICollection<OperationClaim>, GetUsersClaimsResponse>();
+        CreateMap<ICollection<OperationClaim>, GetUsersClaimsResponse>()
+            .ForMember(r => r.Claims, opt => opt.MapFrom(operationClaims => operationClaims));
         CreateMap<User, GetUserResponse>();
         CreateMap<CreateUserRequest, User>();
+        CreateMap<GetUserResponse, User>();
     }
 }

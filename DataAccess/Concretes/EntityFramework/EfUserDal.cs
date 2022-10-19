@@ -19,7 +19,7 @@ public class EfUserDal : EfEntityRepositoryBase<User, RentACarBoschContext>, IUs
                                                // id 1, name admin, userId 1, id 1, operationId 1
                                                // id 2, name brands.add, userId 2, id 2, operationId 2
                                                // id 3, name brand.update, userId 1, id 3, operationId 3
-                                               where userOperationClaim.Id == user.Id
+                                               where userOperationClaim.UserId == user.Id
                                                // id 1, name admin, userId 1, id 1, operationId 1
                                                // id 3, name brand.update, userId 1, id 3, operationId 3
                                                select new OperationClaim { Id = operationClaim.Id, Name = operationClaim.Name };

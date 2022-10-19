@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using Core.CrossCuttingConcerns.Security.Entities;
 using Core.CrossCuttingConcerns.Security.Token.Encryption;
-using Core.CrossCuttingConcerns.Security.Token.Extentions;
+using Core.CrossCuttingConcerns.Security.Token.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -20,13 +20,19 @@ public class JwtHelper: ITokenHelper
 
     public AccessToken CreateToken(User user, ICollection<OperationClaim> operationClaims)
     {
-        _accessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.TokenExpiration);
+        _accessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
 
         SecurityKey securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
         // jwt'deki signature kısmı için hangi security key ve algoritma oluşturacağımızı belirliyoruz.
         SigningCredentials signingCredentials = SigningCredentialsHelper.CreateSigningCredentials(securityKey);
 
-        var jwt = 
+        // JwtSecurityToken'a ait bilgileri oluşturduk.
+        JwtSecurityToken jwt = createJwtSecurityToken(user, operationClaims, signingCredentials);
+        // JwtSecurityTokenHandler ile jwt string'imizi oluşturduk.
+        JwtSecurityTokenHandler jwtSecurityTokenHandler = new();
+        string token = jwtSecurityTokenHandler.WriteToken(jwt);
+
+        return new AccessToken { Token = token, ExpirationTime = _accessTokenExpiration };
     }
 
     private JwtSecurityToken createJwtSecurityToken(
@@ -44,7 +50,10 @@ public class JwtHelper: ITokenHelper
     private IEnumerable<Claim> setClaims(User user, ICollection<OperationClaim> operationClaims)
     {
         List<Claim> claims = new();
-        claims.AddNameIdentifier();
-
+        claims.AddNameIdentifier(user.Id.ToString());
+        claims.AddEmail(user.Email);
+        claims.AddName($"{user.FirstName} {user.LastName}");
+        claims.AddRoles(operationClaims.Select(o=>o.Name).ToArray());
+        return claims;
     }
 }

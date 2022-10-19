@@ -8,6 +8,9 @@ using Business.BusinessRules;
 using Business.Concretes;
 using Core.Business.Mailing;
 using Core.Business.Mailing.MailKit;
+using Core.CrossCuttingConcerns.Security.Entities;
+using Core.CrossCuttingConcerns.Security.Token;
+using Core.CrossCuttingConcerns.Security.Token.JWT;
 using DataAccess.Abstracts;
 using DataAccess.Concretes.EntityFramework;
 using DataAccess.Concretes.InMemory;
@@ -33,6 +36,12 @@ namespace Business
             services.AddAutoMapper(assemblies: AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddSingleton<IMailService, MailKitMailService>();
+
+            services.AddSingleton<IUserDal, EfUserDal>();
+            services.AddSingleton<IUserService, UserManager>();
+            services.AddSingleton<IAuthService, AuthManager>();
+            services.AddSingleton<AuthBusinessRules>();
+            services.AddSingleton<ITokenHelper, JwtHelper>();
 
             // return <genişletmek istenen tür>
             return services;
