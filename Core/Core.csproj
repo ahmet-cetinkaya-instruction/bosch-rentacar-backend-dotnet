@@ -23,6 +23,8 @@
   <ItemGroup>
     <Folder Include="CrossCuttingConcerns\Security\Token\Extensions\" />
     <Folder Include="DependencyResolvers\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="Utilities\IoC\" />
   </ItemGroup>
 
 </Project>

@@ -57,5 +57,4 @@ public class AutofacBusinessModule: Module
                })
                .SingleInstance();
     }
-    
 }

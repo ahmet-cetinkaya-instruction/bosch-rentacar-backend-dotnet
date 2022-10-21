@@ -1,12 +1,12 @@
-using Business;
-using Business.Abstracts;
-using Business.BusinessRules;
-using Business.Concretes;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Business.DependencyResolvers;
+using Business.DependencyResolvers.Autofac;
 using Core.CrossCuttingConcerns.Exceptions;
 using Core.CrossCuttingConcerns.Security.Token;
 using Core.CrossCuttingConcerns.Security.Token.Encryption;
-using DataAccess.Abstracts;
-using DataAccess.Concretes.InMemory;
+using Core.DependencyResolvers;
+using Core.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -14,8 +14,15 @@ using Microsoft.OpenApi.Models;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-builder.Services.AddBusinessServices();
+//builder.Services.AddBusinessServices();
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+builder.Host.ConfigureContainer<ContainerBuilder>(
+    builder => builder.RegisterModule(new AutofacBusinessModule()));
+builder.Services.AddDependencyResolvers(new ICoreModule[]
+{
+    new CoreModule(),
+    new BusinessCoreModule()
+});
 
 TokenOptions tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -23,13 +30,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        {
            options.TokenValidationParameters = new TokenValidationParameters
            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer =  tokenOptions.Issuer,
-                ValidAudience = tokenOptions.Audience,
-                IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
+               ValidateIssuer = true,
+               ValidateAudience = true,
+               ValidateLifetime = true,
+               ValidateIssuerSigningKey = true,
+               ValidIssuer = tokenOptions.Issuer,
+               ValidAudience = tokenOptions.Audience,
+               IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
            };
        });
 
@@ -78,6 +85,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 //if(app.Environment.IsProduction())
-    app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.Run();
