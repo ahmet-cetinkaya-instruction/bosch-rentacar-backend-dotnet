@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="CrossCuttingConcerns\Security\Exceptions\" />
     <Folder Include="CrossCuttingConcerns\Security\Token\Extensions\" />
     <Folder Include="DependencyResolvers\" />
     <Folder Include="Extensions\" />

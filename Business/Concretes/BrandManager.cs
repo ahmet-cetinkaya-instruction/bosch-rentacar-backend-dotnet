@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
+using Business.BusinessAspects.Autofac;
 using Business.BusinessRules;
 using Business.Requests.Brands;
 using Business.Responses.Brands;
@@ -27,6 +28,7 @@ public class BrandManager : IBrandService
         _mailService = mailService;
     }
 
+    [SecuredOperation("brands.add")]
     public void Add(CreateBrandRequest request)
     {
         /*

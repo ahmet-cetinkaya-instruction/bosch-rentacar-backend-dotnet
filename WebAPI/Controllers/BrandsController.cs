@@ -40,7 +40,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         public void Add(CreateBrandRequest request)
         {
             _brandService.Add(request);
