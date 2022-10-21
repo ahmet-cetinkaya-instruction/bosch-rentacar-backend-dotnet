@@ -19,7 +19,7 @@ public static class HashingHelper
         using (HMACSHA512 hmac = new(passwordSalt))
         {
             byte[] computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-
+            // 0-255
             //int i = 0;
             for (int i = 0; i < computedHash.Length; ++i)
             {
@@ -40,7 +40,6 @@ public static class HashingHelper
                 //// 1
                 //var result2 = plusPlusI(i); // ++i; // 1
                 //// 1
-
                 //++i;
 
                 if (computedHash[i] != passwordHash[i])

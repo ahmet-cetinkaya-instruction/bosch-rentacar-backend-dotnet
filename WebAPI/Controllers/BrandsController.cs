@@ -3,6 +3,7 @@ using Business.Requests.Brands;
 using Business.Responses.Brands;
 using Core.Business.Requests;
 using Core.DataAccess.Paging;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // GetList: GET api/brands
@@ -39,6 +40,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public void Add(CreateBrandRequest request)
         {
             _brandService.Add(request);

@@ -18,9 +18,16 @@ namespace WebAPI.Controllers
         }
         
         [HttpPost("register")]
-        public AccessResponse Register(RegisterUserRequest request)
+        public AccessResponse Register([FromBody] RegisterUserRequest request)
         {
             AccessResponse result = _authService.Register(request);
+            return result;
+        }
+
+        [HttpPost("login")]
+        public AccessResponse Login([FromBody] LoginUserRequest request)
+        {
+            AccessResponse result = _authService.Login(request);
             return result;
         }
     }

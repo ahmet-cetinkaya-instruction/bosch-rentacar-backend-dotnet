@@ -29,6 +29,10 @@ public class BrandManager : IBrandService
 
     public void Add(CreateBrandRequest request)
     {
+        /*
+         * Transaction
+         */
+        //todo: authorization
         // Dry code - Dont repeat yourself
         ValidationTool.Validate(new CreateBrandRequestValidator(), request);
 
@@ -41,6 +45,10 @@ public class BrandManager : IBrandService
 
     public void Delete(DeleteBrandRequest request)
     {
+        //todo: authorization
+        /*
+         * Transaction
+         */
         _brandBusinessRules.CheckIfBrandExists(request.Id);
 
         Brand brandToDelete = _mapper.Map<Brand>(request);
@@ -50,6 +58,11 @@ public class BrandManager : IBrandService
 
     public PaginateListBrandResponse GetList(PageRequest request)
     {
+        // cache
+        /* performance
+         
+
+         */
         IPaginate<Brand> brands = _brandDal.GetList(index: request.Index, 
                                                     size: request.Size, 
                                                     orderBy: b => b.OrderBy(b => b.Name));
@@ -69,8 +82,34 @@ public class BrandManager : IBrandService
         return response;
     }
 
-    public void Update(UpdateBrandRequest request)
+    // AOP - Aspect Oriented Programming
+    //[SecuredOperation("brands.update")]
+    //[PerformanceTracking(2)]
+    //[Transaction]
+    //[Validation]
+    //[Logging]
+    public void Update(UpdateBrandRequest request)  // Reflection
     {
+        ///*
+        // * authorization
+        // */
+        ///* performance
+        // start
+        //    update.invoke
+        //end
+        // */
+        ///*
+        // * Transaction
+        // */
+        ///*
+        // * validation
+        //        validatool(update.params)
+        //        update.invoke()
+        // */
+        ///*
+        // * logging
+        // */
+
         Brand? brand = _brandDal.Get(b => b.Id == request.Id);
         _brandBusinessRules.CheckIfBrandExists(brand);
 

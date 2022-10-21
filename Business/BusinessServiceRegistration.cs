@@ -39,6 +39,7 @@ namespace Business
 
             services.AddSingleton<IUserDal, EfUserDal>();
             services.AddSingleton<IUserService, UserManager>();
+            services.AddSingleton<UserBusinessRules>();
             services.AddSingleton<IAuthService, AuthManager>();
             services.AddSingleton<AuthBusinessRules>();
             services.AddSingleton<ITokenHelper, JwtHelper>();

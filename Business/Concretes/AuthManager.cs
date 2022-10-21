@@ -5,6 +5,7 @@ using Business.Requests.Auth;
 using Business.Requests.Users;
 using Business.Responses.Auth;
 using Business.Responses.Users;
+using Core.Business.Exceptions;
 using Core.CrossCuttingConcerns.Security.Entities;
 using Core.CrossCuttingConcerns.Security.Hashing;
 using Core.CrossCuttingConcerns.Security.Token;
@@ -49,12 +50,13 @@ public class AuthManager : IAuthService
 
     public AccessResponse Login(LoginUserRequest request)
     {
-        GetUserResponse user = _userService.GetByMail(request.Email);
-        //todo: check password Verification
-        //todo: create access token
-        AccessResponse response = new() { AccessToken = new AccessToken() };
+        User user = _userService.GetUserByMail(request.Email);
+        _authBusinessRules.CheckIfPasswordMatch(request.Password, user.PasswordHash, user.PasswordSalt);
+
+        AccessResponse response = new() { AccessToken = createAccessToken(user) };
         return response;
     }
+
 
     private AccessToken createAccessToken(User user)
     {

@@ -7,6 +7,7 @@ namespace Business.Abstracts;
 public interface IUserService
 {
     GetUsersClaimsResponse GetClaims(GetUsersClaimsRequest request);
-    GetUserResponse GetByMail(string mail);
+    GetUserResponse GetByMail(string email);
+    User GetUserByMail(string email);
     void Add(CreateUserRequest request);
 }

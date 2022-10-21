@@ -49,6 +49,11 @@ namespace DataAccess.Concretes.EntityFramework.Contexts
                 o.Property(o => o.Name).HasColumnName("Name").IsRequired();
             });
 
+            modelBuilder.Entity<User>(u =>
+            {
+                u.Property(u => u.Status).HasDefaultValue(true);
+            });
+
             // Seed
             Brand[] brandSeeds = { new() { Id = 1, Name = "Audi" } };
             modelBuilder.Entity<Brand>().HasData(brandSeeds);
