@@ -88,6 +88,7 @@ public class BrandManager : IBrandService
     //[Transaction]
     //[Validation]
     //[Logging]
+    // Interceptor
     public void Update(UpdateBrandRequest request)  // Reflection
     {
         ///*
