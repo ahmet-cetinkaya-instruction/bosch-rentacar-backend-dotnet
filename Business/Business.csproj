@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DependencyResolvers\Autofac\" />
     <Folder Include="Requests\Users\" />
     <Folder Include="Responses\Models\" />
     <Folder Include="Responses\Users\" />

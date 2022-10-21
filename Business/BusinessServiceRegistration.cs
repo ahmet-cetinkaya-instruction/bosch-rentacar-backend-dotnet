@@ -25,26 +25,8 @@ namespace Business
         // return: <genişletmek istenen tür>
         public static IServiceCollection AddBusinessServices(this IServiceCollection services) // this <genişletmek istenen tür>
         {
-            // IoC
-            services.AddSingleton<IBrandDal, EfBrandDal>(); // 100
-            services.AddSingleton<BrandBusinessRules>(); // 101
-            services.AddSingleton<IBrandService, BrandManager>(); // 102
-
-            services.AddSingleton<IModelDal, EfModelDal>();
-            services.AddSingleton<IModelService, ModelManager>();
-
             services.AddAutoMapper(assemblies: AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddSingleton<IMailService, MailKitMailService>();
-
-            services.AddSingleton<IUserDal, EfUserDal>();
-            services.AddSingleton<IUserService, UserManager>();
-            services.AddSingleton<UserBusinessRules>();
-            services.AddSingleton<IAuthService, AuthManager>();
-            services.AddSingleton<AuthBusinessRules>();
-            services.AddSingleton<ITokenHelper, JwtHelper>();
-
-            // return <genişletmek istenen tür>
             return services;
         }
     }

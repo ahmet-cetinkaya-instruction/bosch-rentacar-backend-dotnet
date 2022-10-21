@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <Folder Include="CrossCuttingConcerns\Security\Token\Extensions\" />
-    <Folder Include="Utilities\Interceptors\" />
+    <Folder Include="DependencyResolvers\" />
   </ItemGroup>
 
 </Project>
