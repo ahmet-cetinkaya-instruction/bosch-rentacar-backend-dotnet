@@ -29,8 +29,8 @@ public class SecuredOperation:MethodInterception
 
     protected override void OnBefore(IInvocation invocation)
     {
-        bool isAuthenticate = _httpContextAccessor.HttpContext.User.Claims.IsNullOrEmpty();
-        if (isAuthenticate)
+        bool isAuthenticate = !_httpContextAccessor.HttpContext.User.Claims.IsNullOrEmpty();
+        if (!isAuthenticate)
             throw new AuthenticationException("You are not authenticate.");
 
         ICollection<string> usersRoleClaims = _httpContextAccessor.HttpContext.User.ClaimRoles();
