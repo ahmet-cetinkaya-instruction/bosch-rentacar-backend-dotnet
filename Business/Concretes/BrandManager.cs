@@ -32,17 +32,8 @@ public class BrandManager : IBrandService
     [ValidationAspect(typeof(CreateBrandRequestValidator))]
     public void Add(CreateBrandRequest request)
     {
-        /*
-         * Transaction
-         */
-        //todo: authorization
-        // Dry code - Dont repeat yourself
-        ValidationTool.Validate(new CreateBrandRequestValidator(), request);
-
         _brandBusinessRules.CheckIfBrandNameNotExists(request.Name);
-
         Brand brandToAdd = _mapper.Map<Brand>(request); // AutoMapper Reflection
-
         _brandDal.Add(brandToAdd);
     }
 

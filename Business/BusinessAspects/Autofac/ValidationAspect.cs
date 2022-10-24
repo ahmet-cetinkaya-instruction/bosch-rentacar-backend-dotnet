@@ -1,4 +1,5 @@
 ﻿using Castle.DynamicProxy;
+using Core.CrossCuttingConcerns.Validation.FluentValidation;
 using Core.Utilities.Interceptors;
 using FluentValidation;
 
@@ -19,13 +20,21 @@ public class ValidationAspect : MethodInterception
     {
         // Reflection kullanarak _validatorType'ın tuttuğu tipte instance oluşturduk, yani new'ledik.
         // cast ve as farkı, cast casting işlemi başarısız olduğunda hata fırlatıyor. as ise null değer dönüyor.
-        IValidator validator = (Activator.CreateInstance(_validatorType) as IValidator)!;
+        IValidator validator = (Activator.CreateInstance(_validatorType) as IValidator)!; 
+        //yapılan örnek için: new CreateBrandRequestValidator()
 
-        //todo: kontrol edeceğimiz nesne, request'i alıcaz. Parametreerini okuyarak alıcaz.
+        //+todo: _validatorType base sınıfına bakacağız. base sınıfın jenerik argümanlanını alıcaz.
+        Type typeToValidate = _validatorType.BaseType.GetGenericArguments()[0];
 
-        //todo: _validatorType base sınıfına bakacağız. base sınıfın jenerik argümanlanını alıcaz.
-        //todo: ilgili metodun parametelerine bakacağız. sadece validate edeceğimiz parameterleri alıcaz
 
-        //todo: parameterleri tek tek validate edicez.
+        //+todo: ilgili metodun parametelerine bakacağız. sadece validate edeceğimiz parameterleri alıcaz
+        IEnumerable<object> argumentsToValidate = invocation.Arguments.Where(o => o.GetType() == typeToValidate);
+
+        
+        //+todo: parameterleri tek tek validate edicez.
+        foreach (object argumentToValidate in argumentsToValidate)
+        {
+            ValidationTool.Validate(validator, argumentToValidate);
+        }
     }
 }
