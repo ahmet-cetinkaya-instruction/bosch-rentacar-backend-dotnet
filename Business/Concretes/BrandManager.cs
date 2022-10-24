@@ -29,6 +29,7 @@ public class BrandManager : IBrandService
     }
 
     [SecuredOperation("brands.add")]
+    [ValidationAspect(typeof(CreateBrandRequestValidator))]
     public void Add(CreateBrandRequest request)
     {
         /*
