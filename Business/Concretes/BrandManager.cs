@@ -8,7 +8,6 @@ using Business.ValidationRules.FluentValidation.Brands;
 using Core.Aspects;
 using Core.Business.Mailing;
 using Core.Business.Requests;
-using Core.CrossCuttingConcerns.Validation.FluentValidation;
 using Core.DataAccess.Paging;
 using DataAccess.Abstracts;
 using Entities.Concretes;
@@ -40,6 +39,7 @@ public class BrandManager : IBrandService
     }
 
     [CacheRemoveAspect("IBrandService.Get")]
+    [TransactionAspect]
     public void Delete(DeleteBrandRequest request)
     {
         _brandBusinessRules.CheckIfBrandExists(request.Id);
@@ -47,6 +47,9 @@ public class BrandManager : IBrandService
         Brand brandToDelete = _mapper.Map<Brand>(request);
 
         _brandDal.Delete(brandToDelete);
+
+        // Diyelimki bu brand'a ait modeller de silinsin.
+        // Bu durum da modellerin birinde ortaya çıkan hataya karşın transaction kullanabiliriz.
     }
 
     [PerformanceAspect(2)]
