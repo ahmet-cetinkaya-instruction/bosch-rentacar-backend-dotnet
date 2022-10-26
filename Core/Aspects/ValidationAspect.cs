@@ -3,7 +3,7 @@ using Core.CrossCuttingConcerns.Validation.FluentValidation;
 using Core.Utilities.Interceptors;
 using FluentValidation;
 
-namespace Business.BusinessAspects.Autofac;
+namespace Core.Aspects;
 
 public class ValidationAspect : MethodInterception
 {
@@ -18,6 +18,7 @@ public class ValidationAspect : MethodInterception
 
     protected override void OnBefore(IInvocation invocation)
     {
+        // Çalışma anında gerçekleşiyor. Runtime
         // Reflection kullanarak _validatorType'ın tuttuğu tipte instance oluşturduk, yani new'ledik.
         // cast ve as farkı, cast casting işlemi başarısız olduğunda hata fırlatıyor. as ise null değer dönüyor.
         IValidator validator = (Activator.CreateInstance(_validatorType) as IValidator)!; 

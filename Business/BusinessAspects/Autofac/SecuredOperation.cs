@@ -1,17 +1,16 @@
-﻿using System.Security.Authentication;
-using Castle.Core.Internal;
+﻿using Castle.Core.Internal;
 using Castle.DynamicProxy;
-using Core.Business.Exceptions;
 using Core.CrossCuttingConcerns.Security.Exceptions;
 using Core.CrossCuttingConcerns.Security.Token.Extensions;
 using Core.Utilities.Interceptors;
 using Core.Utilities.IoC;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using System.Security.Authentication;
 
 namespace Business.BusinessAspects.Autofac;
 
-public class SecuredOperation:MethodInterception
+public class SecuredOperation : MethodInterception
 {
     private string[] _requiredClaims;
     private IHttpContextAccessor _httpContextAccessor;
@@ -35,8 +34,8 @@ public class SecuredOperation:MethodInterception
 
         ICollection<string> usersRoleClaims = _httpContextAccessor.HttpContext.User.ClaimRoles();
         bool isAuthorize = _requiredClaims.All(requiredClaim => usersRoleClaims.Contains(requiredClaim));
-        if(!isAuthorize) 
-                throw new AuthorizeException("You are not authorize.");
+        if (!isAuthorize)
+            throw new AuthorizeException("You are not authorize.");
         //foreach (var requiredClaim in _requiredClaims)
         //{
         //    if (!usersRoleClaims.Contains(requiredClaim))

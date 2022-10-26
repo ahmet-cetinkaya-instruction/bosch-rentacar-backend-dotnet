@@ -5,6 +5,7 @@ using Business.BusinessRules;
 using Business.Requests.Brands;
 using Business.Responses.Brands;
 using Business.ValidationRules.FluentValidation.Brands;
+using Core.Aspects;
 using Core.Business.Mailing;
 using Core.Business.Requests;
 using Core.CrossCuttingConcerns.Validation.FluentValidation;
@@ -50,6 +51,7 @@ public class BrandManager : IBrandService
         _brandDal.Delete(brandToDelete);
     }
 
+    [PerformanceAspect(2)]
     public PaginateListBrandResponse GetList(PageRequest request)
     {
         // cache
