@@ -14,7 +14,7 @@ public class PerformanceAspect : MethodInterception
     public PerformanceAspect(int interval) // 2sn // İlgili metotun beklendiği süre içerisinde işlemini işlemin gerçekleştirmesi
     {
         _interval = interval;
-        _stopwatch = ServiceTool.ServiceProvider.GetService<Stopwatch>();
+        _stopwatch = ServiceTool.ServiceProvider.GetService<Stopwatch>()!;
     }
 
     protected override void OnBefore(IInvocation invocation)
@@ -25,11 +25,16 @@ public class PerformanceAspect : MethodInterception
 
     protected override void OnAfter(IInvocation invocation)
     {
+        //todo: remove
+        Debug.WriteLine(
+                $"Performance : {invocation.Method.DeclaringType.FullName}.{invocation.Method.Name} ---> {_stopwatch.Elapsed.TotalSeconds} / {_interval}");
+        
         if(_stopwatch.Elapsed.TotalSeconds // o ana kadar geçen süreyi verir
            > _interval) // parametreyle hedef süremizdi
         // "Performance : BrandManager.GetList - 5/2" şeklinde debug konsolundan geliştiricilere haberdar ettik.
             Debug.WriteLine(
                 $"Performance : {invocation.Method.DeclaringType.FullName}.{invocation.Method.Name} ---> {_stopwatch.Elapsed.TotalSeconds} / {_interval}");
+
         // Sayacın saymaya devam etmemesi için, sayacı 0'a eşitleyip durdurduk.
         _stopwatch.Reset();
     }
