@@ -2,7 +2,7 @@
 
 namespace Core.CrossCuttingConcerns.Logging.Serilog;
 
-public abstract class LoggerServiceBase : ILoggingManager
+public abstract class LoggerManagerBase : ILoggingManager
 {
     protected ILogger _logger { get; set; }
 
