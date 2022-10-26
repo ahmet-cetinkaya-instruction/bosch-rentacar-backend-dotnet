@@ -31,6 +31,7 @@ public class BrandManager : IBrandService
 
     [SecuredOperation("brands.add")]
     [ValidationAspect(typeof(CreateBrandRequestValidator))]
+    [CacheRemoveAspect("IBrandService.Get")]
     public void Add(CreateBrandRequest request)
     {
         _brandBusinessRules.CheckIfBrandNameNotExists(request.Name);
@@ -38,12 +39,9 @@ public class BrandManager : IBrandService
         _brandDal.Add(brandToAdd);
     }
 
+    [CacheRemoveAspect("IBrandService.Get")]
     public void Delete(DeleteBrandRequest request)
     {
-        //todo: authorization
-        /*
-         * Transaction
-         */
         _brandBusinessRules.CheckIfBrandExists(request.Id);
 
         Brand brandToDelete = _mapper.Map<Brand>(request);
@@ -52,13 +50,9 @@ public class BrandManager : IBrandService
     }
 
     [PerformanceAspect(2)]
+    [CacheAspect(10)]
     public PaginateListBrandResponse GetList(PageRequest request)
     {
-        // cache
-        /* performance
-         
-
-         */
         IPaginate<Brand> brands = _brandDal.GetList(index: request.Index, 
                                                     size: request.Size, 
                                                     orderBy: b => b.OrderBy(b => b.Name));
@@ -68,6 +62,7 @@ public class BrandManager : IBrandService
         return response;
     }
 
+    [CacheAspect(10)]
     public GetBrandResponse GetById(int id)
     {
         Brand? brand = _brandDal.Get(b => b.Id == id);
@@ -85,28 +80,9 @@ public class BrandManager : IBrandService
     //[Validation]
     //[Logging]
     // Interceptor
+    [CacheRemoveAspect("IBrandService.Get")]
     public void Update(UpdateBrandRequest request)  // Reflection
     {
-        ///*
-        // * authorization
-        // */
-        ///* performance
-        // start
-        //    update.invoke
-        //end
-        // */
-        ///*
-        // * Transaction
-        // */
-        ///*
-        // * validation
-        //        validatool(update.params)
-        //        update.invoke()
-        // */
-        ///*
-        // * logging
-        // */
-
         Brand? brand = _brandDal.Get(b => b.Id == request.Id);
         _brandBusinessRules.CheckIfBrandExists(brand);
 

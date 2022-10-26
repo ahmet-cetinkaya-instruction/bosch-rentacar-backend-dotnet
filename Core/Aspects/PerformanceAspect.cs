@@ -25,10 +25,6 @@ public class PerformanceAspect : MethodInterception
 
     protected override void OnAfter(IInvocation invocation)
     {
-        //todo: remove
-        Debug.WriteLine(
-                $"Performance : {invocation.Method.DeclaringType.FullName}.{invocation.Method.Name} ---> {_stopwatch.Elapsed.TotalSeconds} / {_interval}");
-        
         if(_stopwatch.Elapsed.TotalSeconds // o ana kadar geçen süreyi verir
            > _interval) // parametreyle hedef süremizdi
         // "Performance : BrandManager.GetList - 5/2" şeklinde debug konsolundan geliştiricilere haberdar ettik.
