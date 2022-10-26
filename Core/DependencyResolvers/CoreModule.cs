@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using Core.Business.Mailing;
 using Core.Business.Mailing.MailKit;
+using Core.CrossCuttingConcerns.Caching;
+using Core.CrossCuttingConcerns.Caching.Microsoft;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,5 +15,7 @@ public class CoreModule : ICoreModule
         services.AddSingleton<IMailService, MailKitMailService>();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddSingleton<Stopwatch>();
+        services.AddMemoryCache();
+        services.AddSingleton<ICacheManager, MemoryCacheManager>();
     }
 }

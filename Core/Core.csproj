@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <Folder Include="CrossCuttingConcerns\Caching\Microsoft\" />
+    <Folder Include="CrossCuttingConcerns\Caching\Redis\" />
     <Folder Include="CrossCuttingConcerns\Security\Exceptions\" />
     <Folder Include="CrossCuttingConcerns\Security\Token\Extensions\" />
     <Folder Include="DependencyResolvers\" />

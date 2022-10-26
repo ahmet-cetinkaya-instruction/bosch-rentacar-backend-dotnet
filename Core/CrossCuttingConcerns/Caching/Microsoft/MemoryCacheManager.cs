@@ -2,9 +2,11 @@
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Core.CrossCuttingConcerns.Caching.Microsoft;
 
+// Adapter Design Pattern
 public class MemoryCacheManager : ICacheManager
 {
     private readonly IMemoryCache _memoryCache;
@@ -51,13 +53,15 @@ public class MemoryCacheManager : ICacheManager
             typeof(MemoryCache).GetProperty("EntriesCollection", BindingFlags.NonPublic | BindingFlags.Instance);
 
         // dynamic, derleme zamanında değil, çalışma zamanında tipini dinamik olarak alan yapıdır.
-        var cacheEntriesCollection = cacheEntriesCollectionDefinition.GetValue(_memoryCache) as dynamic;
+        dynamic cacheEntriesCollection = cacheEntriesCollectionDefinition.GetValue(_memoryCache) as dynamic;
 
-        List<ICacheEntry> cacheCollectionValues = new();
-        foreach (var cacheEntry in cacheEntriesCollection)
+        // İlgili cache'in key'i regex'e uyuyorsa key üzerinden verileri remove ettik.
+        Regex regex = new(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        foreach (dynamic cacheEntry in cacheEntriesCollection)
         {
             ICacheEntry cacheEntryValue = cacheEntry.GetType().GetProperty("Value").GetValue(cacheEntry, null);
-            cacheCollectionValues.Add(cacheEntryValue);
+            if(regex.IsMatch(cacheEntryValue.Key.ToString()!))
+                _memoryCache.Remove(cacheEntryValue.Key);
         }
     }
 }
