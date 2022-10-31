@@ -33,6 +33,7 @@ public class BrandManager : IBrandService
     [ValidationAspect(typeof(CreateBrandRequestValidator))]
     [CacheRemoveAspect("IBrandService.Get")]
     [LogAspect(typeof(FileLogger))]
+    //[LogAspect(typeof(MongoDbLogger))]
     public void Add(CreateBrandRequest request)
     {
         _brandBusinessRules.CheckIfBrandNameNotExists(request.Name);
