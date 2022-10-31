@@ -8,6 +8,7 @@ using Business.ValidationRules.FluentValidation.Brands;
 using Core.Aspects;
 using Core.Business.Mailing;
 using Core.Business.Requests;
+using Core.CrossCuttingConcerns.Logging.Serilog;
 using Core.DataAccess.Paging;
 using DataAccess.Abstracts;
 using Entities.Concretes;
@@ -31,6 +32,7 @@ public class BrandManager : IBrandService
     [SecuredOperation("brands.add")]
     [ValidationAspect(typeof(CreateBrandRequestValidator))]
     [CacheRemoveAspect("IBrandService.Get")]
+    [LogAspect(typeof(FileLogger))]
     public void Add(CreateBrandRequest request)
     {
         _brandBusinessRules.CheckIfBrandNameNotExists(request.Name);
