@@ -2,7 +2,8 @@
 using Business.Abstracts;
 using Business.Requests.Models;
 using Business.Responses.Models;
-using Core.Business.Mailing;
+using Core.Business.Requests;
+using Core.DataAccess.Paging;
 using DataAccess.Abstracts;
 using Entities.Concretes;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,14 @@ public class ModelManager : IModelService
                                      include: m => m.Include(mi => mi.Brand));
 
         GetModelResponse response = _mapper.Map<GetModelResponse>(model);
+        return response;
+    }
+    public PaginateListModelResponse GetList(PageRequest request)
+    {
+        IPaginate<Model> models = _modelDal.GetList(index: request.Index, size: request.Size,
+            include: m => m.Include(mi => mi.Brand));
+
+        PaginateListModelResponse? response = _mapper.Map<PaginateListModelResponse>(models);
         return response;
     }
 }
