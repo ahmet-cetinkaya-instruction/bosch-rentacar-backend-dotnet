@@ -10,6 +10,7 @@ using Core.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using WebAPI.Configuration;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -69,6 +70,14 @@ builder.Services.AddSwaggerGen(opt =>
         }
     });
 });
+builder.Services.AddCors(
+//    opt => opt.AddDefaultPolicy(corsPolicyBuilder =>
+//{
+//    corsPolicyBuilder.AllowAnyHeader();
+//    corsPolicyBuilder.AllowAnyMethod();
+//    corsPolicyBuilder.AllowCredentials();
+//})
+);
 
 WebApplication app = builder.Build();
 
@@ -86,5 +95,14 @@ app.MapControllers();
 
 //if(app.Environment.IsProduction())
 app.UseMiddleware<ExceptionMiddleware>();
+
+app.UseCors(opt =>
+{
+    var corsOriginConfiguration = app.Configuration.GetSection("CorsOriginsConfiguration").Get<CorsOriginsConfiguration>();
+    opt.WithOrigins(corsOriginConfiguration.AngularUI)
+       .AllowAnyHeader()
+       .AllowAnyMethod()
+       .AllowCredentials();
+});
 
 app.Run();
